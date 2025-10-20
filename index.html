@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Playlist Especial 🎵</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8c0ff 0%, #c2e9fb 50%, #e0c3fc 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .butterfly {
+            position: fixed;
+            font-size: 35px;
+            animation: fly 20s infinite ease-in-out;
+            z-index: 1;
+            pointer-events: none;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+        }
+
+        @keyframes fly {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(400px, -250px) rotate(45deg);
+            }
+            50% {
+                transform: translate(800px, -100px) rotate(90deg);
+            }
+            75% {
+                transform: translate(400px, 150px) rotate(135deg);
+            }
+        }
+
+        .player-container {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 50px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 10;
+            animation: fadeIn 1.2s ease-in;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(60px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header-message {
+            font-size: 1.15em;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            background: linear-gradient(135deg, #667eea, #89CFF0, #B4D7FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .album-art {
+            width: 100%;
+            height: 320px;
+            background: linear-gradient(135deg, #89CFF0 0%, #B4D7FF 50%, #DCD6F7 100%);
+            border-radius: 25px;
+            margin-bottom: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 140px;
+            animation: floatArt 4s infinite ease-in-out;
+            box-shadow: 0 20px 50px rgba(137, 207, 240, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .album-art::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes floatArt {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        .song-info {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .song-title {
+            font-size: 2em;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .song-artist {
+            font-size: 1.3em;
+            color: #888;
+            font-weight: 400;
+        }
+
+        .progress-container {
+            margin: 30px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(102, 126, 234, 0.15);
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #89CFF0, #667eea, #B4D7FF);
+            width: 0%;
+            transition: width 0.1s;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(137, 207, 240, 0.6);
+        }
+
+        .time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95em;
+            color: #999;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #89CFF0, #667eea);
+            color: white;
+            border: none;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            font-size: 1.6em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(137, 207, 240, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(135deg, #89CFF0, #667eea);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+            filter: blur(10px);
+        }
+
+        .control-btn:hover::before {
+            opacity: 0.7;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(137, 207, 240, 0.6);
+        }
+
+        .control-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .control-btn.play-btn {
+            width: 90px;
+            height: 90px;
+            font-size: 2.2em;
+            background: linear-gradient(135deg, #B4D7FF, #89CFF0);
+            box-shadow: 0 15px 40px rgba(180, 215, 255, 0.5);
+        }
+
+        .control-btn.play-btn:hover {
+            box-shadow: 0 20px 50px rgba(180, 215, 255, 0.7);
+        }
+
+        .playlist {
+            margin-top: 35px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .playlist-item {
+            background: linear-gradient(135deg, rgba(168, 192, 255, 0.15), rgba(180, 215, 255, 0.15));
+            padding: 18px 25px;
+            margin: 12px 0;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 2px solid transparent;
+        }
+
+        .playlist-item:hover {
+            background: linear-gradient(135deg, rgba(137, 207, 240, 0.3), rgba(180, 215, 255, 0.3));
+            transform: translateX(10px);
+            border-color: rgba(137, 207, 240, 0.4);
+        }
+
+        .playlist-item.active {
+            background: linear-gradient(135deg, #89CFF0, #667eea);
+            color: white;
+            transform: scale(1.03);
+            box-shadow: 0 10px 30px rgba(137, 207, 240, 0.5);
+        }
+
+        .playlist-item .icon {
+            font-size: 1.8em;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .playlist-item .info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .playlist-item .info .title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.05em;
+        }
+
+        .playlist-item .info .artist {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .message {
+            text-align: center;
+            color: #667eea;
+            font-style: italic;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(137, 207, 240, 0.15), rgba(180, 215, 255, 0.15));
+            border-radius: 20px;
+            font-size: 1.1em;
+        }
+
+        .love-message {
+            text-align: center;
+            font-size: 2.5em;
+            color: #667eea;
+            margin: 30px 0 20px 0;
+            font-weight: 700;
+            text-shadow: 2px 2px 10px rgba(137, 207, 240, 0.3);
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.2em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px auto;
+            font-weight: 600;
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.6);
+        }
+
+        .whatsapp-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 20px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #89CFF0, #667eea);
+            border-radius: 20px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #667eea, #B4D7FF);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .volume-slider {
+            width: 150px;
+            height: 8px;
+            border-radius: 10px;
+            background: rgba(102, 126, 234, 0.15);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #89CFF0, #667eea);
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(137, 207, 240, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="butterfly" style="top: 5%; left: 15%;">🦋</div>
+    <div class="butterfly" style="top: 25%; left: 85%; animation-delay: 3s;">🦋</div>
+    <div class="butterfly" style="top: 55%; left: 10%; animation-delay: 6s;">🦋</div>
+    <div class="butterfly" style="top: 75%; left: 75%; animation-delay: 9s;">🦋</div>
+    <div class="butterfly" style="top: 45%; left: 50%; animation-delay: 12s;">🦋</div>
+    <div class="butterfly" style="top: 15%; left: 60%; animation-delay: 15s;">🦋</div>
+
+    <div class="player-container">
+        <div class="header">
+            <div class="header-message">
+                Te mereces todo lo lindo y bueno del mundo nena, cada que sientas que no metete aquí 💙
+            </div>
+            <h1>🎵 nena's version 🦋</h1>
+        </div>
+
+        <div class="album-art" id="albumArt">🎵</div>
+
+        <div class="song-info">
+            <div class="song-title" id="songTitle">Selecciona una canción</div>
+            <div class="song-artist" id="songArtist">🦋</div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="time">
+                <span id="currentTime">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" onclick="previousSong()" title="Anterior">⏮</button>
+            <button class="control-btn play-btn" id="playBtn" onclick="togglePlay()" title="Reproducir/Pausar">▶</button>
+            <button class="control-btn" onclick="nextSong()" title="Siguiente">⏭</button>
+        </div>
+
+        <div class="volume-control">
+            <span style="font-size: 1.2em;">🔈</span>
+            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
+            <span style="font-size: 1.2em;">🔊</span>
+        </div>
+
+        <div class="playlist" id="playlist"></div>
+
+        <div class="message">
+            💜 Disfruta tu música especial 💜
+        </div>
+
+        <div class="love-message">
+            Te amo 💙
+        </div>
+
+        <button class="whatsapp-btn" onclick="sendWhatsApp()">
+            <span style="font-size: 1.5em;">📱</span>
+            Señal de auxilio
+        </button>
+    </div>
+
+    <audio id="audio"></audio>
+
+    <script>
+        function sendWhatsApp() {
+            const phoneNumber = '50240830765';
+            const message = 'holiii';
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+        // INSTRUCCIONES: 
+        // 1. Crea una carpeta llamada "music" en el mismo lugar donde guardes este archivo HTML
+        // 2. Coloca tus archivos MP3 en esa carpeta con estos nombres en ORDEN:
+        //    1.mp3  - Midnight Rain (Taylor Swift)
+        //    2.mp3  - Manada (Humbe)
+        //    3.mp3  - Wildest Dreams (Taylor Swift)
+        //    4.mp3  - Sol y Luna (Duki)
+        //    5.mp3  - Algo Mágico (Rauw Alejandro)
+        //    6.mp3  - Okupa (Wos)
+        //    7.mp3  - Amor de Cine (Humbe)
+        //    8.mp3  - Chance (Paulo Londra)
+        //    9.mp3  - Yes (C.R.O)
+        //    10.mp3 - Cosas Que No Te Dije (Saiko)
+        //    11.mp3 - Columbia (Quevedo)
+        //    12.mp3 - She Don't Give a Fo (Duki, Khea)
+        //    13.mp3 - Birds of a Feather (Billie Eilish)
+        //    14.mp3 - Wildflower (Billie Eilish)
+        //    15.mp3 - Our Song (Taylor Swift)
+
+        const songs = [
+            { title: "Midnight Rain", artist: "Taylor Swift", icon: "🌧️", file: "music/1.mp3" },
+            { title: "Manada", artist: "Humbe", icon: "🐺", file: "music/2.mp3" },
+            { title: "Wildest Dreams", artist: "Taylor Swift", icon: "✨", file: "music/3.mp3" },
+            { title: "Sol y Luna", artist: "Duki", icon: "🌙", file: "music/4.mp3" },
+            { title: "Algo Mágico", artist: "Rauw Alejandro", icon: "🪄", file: "music/5.mp3" },
+            { title: "Okupa", artist: "Wos", icon: "🎭", file: "music/6.mp3" },
+            { title: "Amor de Cine", artist: "Humbe", icon: "🎬", file: "music/7.mp3" },
+            { title: "Chance", artist: "Paulo Londra", icon: "🎲", file: "music/8.mp3" },
+            { title: "Yes", artist: "C.R.O", icon: "💫", file: "music/9.mp3" },
+            { title: "Cosas Que No Te Dije", artist: "Saiko", icon: "💭", file: "music/10.mp3" },
+            { title: "Columbia", artist: "Quevedo", icon: "🌎", file: "music/11.mp3" },
+            { title: "She Don't Give a Fo", artist: "Duki, Khea", icon: "🔥", file: "music/12.mp3" },
+            { title: "Birds of a Feather", artist: "Billie Eilish", icon: "🕊️", file: "music/13.mp3" },
+            { title: "Wildflower", artist: "Billie Eilish", icon: "🌸", file: "music/14.mp3" },
+            { title: "Our Song", artist: "Taylor Swift", icon: "💕", file: "music/15.mp3" }
+        ];
+
+        let currentSongIndex = -1;
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('playBtn');
+        const progress = document.getElementById('progress');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const albumArt = document.getElementById('albumArt');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        audio.volume = 0.7;
+
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value / 100;
+        });
+
+        function renderPlaylist() {
+            const playlistEl = document.getElementById('playlist');
+            playlistEl.innerHTML = songs.map((song, index) => `
+                <div class="playlist-item" onclick="playSong(${index})" id="song-${index}">
+                    <div class="icon">${song.icon}</div>
+                    <div class="info">
+                        <div class="title">${song.title}</div>
+                        <div class="artist">${song.artist}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function playSong(index) {
+            if (currentSongIndex !== -1) {
+                document.getElementById(`song-${currentSongIndex}`).classList.remove('active');
+            }
+            
+            currentSongIndex = index;
+            const song = songs[index];
+            
+            document.getElementById('songTitle').textContent = song.title;
+            document.getElementById('songArtist').textContent = song.artist;
+            albumArt.textContent = song.icon;
+            
+            document.getElementById(`song-${index}`).classList.add('active');
+            
+            audio.src = song.file;
+            audio.play();
+            playBtn.textContent = '⏸';
+        }
+
+        function togglePlay() {
+            if (currentSongIndex === -1) {
+                playSong(0);
+            } else {
+                if (audio.paused) {
+                    audio.play();
+                    playBtn.textContent = '⏸';
+                } else {
+                    audio.pause();
+                    playBtn.textContent = '▶';
+                }
+            }
+        }
+
+        function nextSong() {
+            if (currentSongIndex < songs.length - 1) {
+                playSong(currentSongIndex + 1);
+            } else {
+                playSong(0);
+            }
+        }
+
+        function previousSong() {
+            if (currentSongIndex > 0) {
+                playSong(currentSongIndex - 1);
+            } else {
+                playSong(songs.length - 1);
+            }
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+                const percentage = (audio.currentTime / audio.duration) * 100;
+                progress.style.width = percentage + '%';
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+                durationEl.textContent = formatTime(audio.duration);
+            }
+        });
+
+        audio.addEventListener('ended', () => {
+            nextSong();
+        });
+
+        document.getElementById('progressBar').addEventListener('click', (e) => {
+            const width = e.currentTarget.offsetWidth;
+            const clickX = e.offsetX;
+            const percentage = clickX / width;
+            audio.currentTime = percentage * audio.duration;
+        });
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        renderPlaylist();
+    </script>
+</body>
+</html>
